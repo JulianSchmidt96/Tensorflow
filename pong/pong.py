@@ -1,48 +1,32 @@
-import pygame #helps us make GUI games in python
-import random #help us define which direction the ball will start moving in
-
-#DQN. CNN reads in pixel data. 
-#reinforcement learning. trial and error.
-#maximize action based on reward
-#agent envrioment loop
-#this is called Q Learning
-#based on just game state. mapping of state to action is policy
-#experience replay. learns from past policies
+import pygame 
+import random 
 
 
-#frame rate per second
 FPS = 60
 
-#size of our window
+
 WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 400
 
-#size of our paddle
 PADDLE_WIDTH = 10
 PADDLE_HEIGHT = 60
-#distance from the edge of the window
+
+
 PADDLE_BUFFER = 10
 
-#size of our ball
 BALL_WIDTH = 10
 BALL_HEIGHT = 10
 
-#speeds of our paddle and ball
 PADDLE_SPEED = 2
 BALL_X_SPEED = 3
 BALL_Y_SPEED = 2
 
-#RGB colors for our paddle and ball
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-#initialize our screen using width and height vars
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
-#Paddle 1 is our learning agent/us
-#paddle 2 is the evil AI
 
-#draw our ball
 def drawBall(ballXPos, ballYPos):
     #small rectangle, create it
     ball = pygame.Rect(ballXPos, ballYPos, BALL_WIDTH, BALL_HEIGHT)
@@ -72,19 +56,18 @@ def updateBall(paddle1YPos, paddle2YPos, ballXPos, ballYPos, ballXDirection, bal
     ballYPos = ballYPos + ballYDirection * BALL_Y_SPEED
     score = 0
 
-    #checks for a collision, if the ball hits the left side, our learning agent
     if (
                         ballXPos <= PADDLE_BUFFER + PADDLE_WIDTH and ballYPos + BALL_HEIGHT >= paddle1YPos and ballYPos - BALL_HEIGHT <= paddle1YPos + PADDLE_HEIGHT):
         #switches directions
         ballXDirection = 1
-    #past it
+    
     elif (ballXPos <= 0):
         #negative score
         ballXDirection = 1
         score = -1
         return [score, paddle1YPos, paddle2YPos, ballXPos, ballYPos, ballXDirection, ballYDirection]
     
-    #check if hits the other side
+    
     if (
                         ballXPos >= WINDOW_WIDTH - PADDLE_WIDTH - PADDLE_BUFFER and ballYPos + BALL_HEIGHT >= paddle2YPos and ballYPos - BALL_HEIGHT <= paddle2YPos + PADDLE_HEIGHT):
         #switch directions
@@ -96,27 +79,26 @@ def updateBall(paddle1YPos, paddle2YPos, ballXPos, ballYPos, ballXDirection, bal
         score = 1
         return [score, paddle1YPos, paddle2YPos, ballXPos, ballYPos, ballXDirection, ballYDirection]
     
-    #if it hits the top
-    #move down
+    
     if (ballYPos <= 0):
         ballYPos = 0;
         ballYDirection = 1;
-    #if it hits the bottom, move up
+    
     elif (ballYPos >= WINDOW_HEIGHT - BALL_HEIGHT):
         ballYPos = WINDOW_HEIGHT - BALL_HEIGHT
         ballYDirection = -1
     return [score, paddle1YPos, paddle2YPos, ballXPos, ballYPos, ballXDirection, ballYDirection]
 
-#update the paddle position
+
 def updatePaddle1(action, paddle1YPos):
     #if move up
     if (action[1] == 1):
         paddle1YPos = paddle1YPos - PADDLE_SPEED
-    #if move down
+    
     if (action[2] == 1):
         paddle1YPos = paddle1YPos + PADDLE_SPEED
 
-    #don't let it move off the screen
+    
     if (paddle1YPos < 0):
         paddle1YPos = 0
     if (paddle1YPos > WINDOW_HEIGHT - PADDLE_HEIGHT):
@@ -192,7 +174,7 @@ class PongGame:
         #return our surface data
         return image_data
 
-    #update our screen
+    
     def getNextFrame(self, action):
         pygame.event.pump()
         score = 0
