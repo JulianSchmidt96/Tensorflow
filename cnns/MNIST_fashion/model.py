@@ -26,7 +26,7 @@ model = tf.keras.Sequential([
 
 #Compiling the model
 
-model.compile(optimizer='adam', loss = tf.keras.losses.SparseCategoricalCrossentropy(),  metrics = ['accuracy'])
+model.compile(optimizer='adam', loss = tf.keras.losses.SparseCategoricalCrossentropy(),  metrics = ['accuracy'], callbacks = [cp_callback])
 
 
 
